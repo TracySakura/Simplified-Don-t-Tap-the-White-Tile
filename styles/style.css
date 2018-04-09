@@ -1,0 +1,27 @@
+#main{
+    width: 400px;
+    height: 600px;
+    background: white;
+    border: 2px solid gray;
+    margin: 0 auto;
+    overflow: hidden;
+}
+#con{
+    width: 200%;
+    height: 700px;
+    position: relative;
+    top: -100px;
+    /*border-collapse: collapse;for what*/
+}
+.row{
+    height: 100px;
+    width: 100%;
+}
+.cell{
+    width: 100px;
+    height: 100%;
+    float: left;
+}
+.black{
+    background: black;
+}
