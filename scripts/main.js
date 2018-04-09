@@ -13,6 +13,8 @@ function update(){
         }
         var blacks = document.getElementsByClassName('black');
         addBlackClick(blacks);
+        var whites = document.getElementsByClassName('white');
+        addWhiteClick(whites);
     }else{
         con.style.top = top + 'px';
     }
@@ -58,12 +60,18 @@ function fail(){
 //click on the black cell
 function removeBlack(){
     score += 1;
-    this.className = 'cell';
+    this.className = 'cell white';
     this.removeEventListener('click', removeBlack);
+    this.addEventListener('click', fail);
 }
 function addBlackClick(blacks){
     for(var i=0;i<blacks.length;i++){
         blacks[i].addEventListener('click',removeBlack);
+    }
+}
+function addWhiteClick(whites){
+    for(var i=0;i<whites.length;i++){
+        whites[i].addEventListener('click',fail);
     }
 }
 //init
@@ -71,4 +79,6 @@ var speed = 1;
 var score = 0;
 var blacks = document.getElementsByClassName('black');
 addBlackClick(blacks);
+var whites = document.getElementsByClassName('white');
+addWhiteClick(whites);
 var timeid = window.setInterval(update, 10);
