@@ -11,15 +11,24 @@ function update(){
         if(isBlackBottom()){
             fail();
         }
-        var blacks = document.getElementsByClassName('black');
-        addBlackClick(blacks);
-        var whites = document.getElementsByClassName('white');
-        addWhiteClick(whites);
     }else{
         con.style.top = top + 'px';
     }
 }
-//create a new row with one black cell before the first row
+//create a new row with all white row
+function createAllWhiteRow(){
+    var con = document.getElementById('con');
+    var newRow = document.createElement('div');
+    newRow.className = 'row';
+    for(var i=0;i<4;i++){
+        var newDiv = document.createElement('div');
+        newDiv.className = 'tile';
+        newDiv.addEventListener('click',fail);
+        newRow.appendChild(newDiv);
+    }
+    con.appendChild(newRow);
+}
+//create a new row with one black tile before the first row
 function createRow(){
     var con = document.getElementById('con');
     var newRow = document.createElement('div');
@@ -27,26 +36,30 @@ function createRow(){
     var blackPosition = Math.floor(Math.random()*4);
     for(var i=0;i<4;i++){
         var newDiv = document.createElement('div');
-        newDiv.className = 'cell';
+        newDiv.className = 'tile';
         if(i == blackPosition){
             newDiv.className += ' black';
+            newDiv.addEventListener('click',removeBlack);
+        }else{
+            newDiv.addEventListener('click',fail);
         }
         newRow.appendChild(newDiv);
     }
-    con.insertBefore(newRow, con.firstChild);
+    var firstChild = con.children[0];
+    con.insertBefore(newRow, firstChild);
 }
 //delete the last row
 function deleteRow(){
     var con = document.getElementById('con');
-    var lastChild = con.lastElementChild;
+    var lastChild = con.children[con.children.length-1];
     con.removeChild(lastChild);
 }
-//check if the last row contains black cell
+//check if the last row contains black tile
 function isBlackBottom(){
     var con = document.getElementById('con');
-    var lastRowCells = con.lastElementChild.children;
-    for(var i=0;i<lastRowCells.length;i++){
-        if(lastRowCells[i].className.indexOf('black')!=-1){
+    var lastRowTiles = con.lastElementChild.children;
+    for(var i=0;i<lastRowTiles.length;i++){
+        if(lastRowTiles[i].className.indexOf('black')!=-1){
             return true;
         }
     }
@@ -56,29 +69,81 @@ function isBlackBottom(){
 function fail(){
     clearInterval(timeid);
     alert('game over!\nscore: '+score);
+    home();
 }
-//click on the black cell
+//click on the mode botton
+function selectMode(){
+    var mode = document.getElementById('easy');
+    mode.addEventListener('click',function(){
+        speed = 1;
+        begin();
+    });
+    mode = document.getElementById('medium');
+    mode.addEventListener('click',function(){
+        speed = 2;
+        begin();
+    }); 
+    mode = document.getElementById('hard');
+    mode.addEventListener('click', function(){
+        speed = 3;
+        begin();
+    });
+}
+//click on the black tile
 function removeBlack(){
-    score += 1;
-    this.className = 'cell white';
+    this.className = 'tile white';
     this.removeEventListener('click', removeBlack);
     this.addEventListener('click', fail);
+    updateScore(score+1);
 }
-function addBlackClick(blacks){
-    for(var i=0;i<blacks.length;i++){
-        blacks[i].addEventListener('click',removeBlack);
-    }
+//update the score
+function updateScore(s){
+    score = s;
+    scoreText = document.getElementById('score');
+    scoreText.innerText = 'Score: ' + score;
 }
-function addWhiteClick(whites){
-    for(var i=0;i<whites.length;i++){
-        whites[i].addEventListener('click',fail);
+//home page
+function home(){
+    updateScore(0);
+    var main = document.getElementById('main');
+    var home = document.createElement('div');
+    home.id = 'home';
+    home.appendChild(document.createElement('button'));
+    home.appendChild(document.createElement('button'));
+    home.appendChild(document.createElement('button'));
+    var buttons = home.children;
+    buttons[0].innerText = 'EASY';
+    buttons[0].className = 'modeButton';
+    buttons[0].id = 'easy';
+    buttons[1].innerText = 'MEDIUM';
+    buttons[1].className = 'modeButton';
+    buttons[1].id = 'medium';
+    buttons[2].innerText = 'HARD';
+    buttons[2].className = 'modeButton';
+    buttons[2].id = 'hard';
+    var firstChild = main.children[0];
+    main.replaceChild(home, firstChild);
+    selectMode();
+}
+//game start
+function begin(){
+    var main = document.getElementById('main');
+    var con = document.createElement('div');
+    con.id = 'con';
+    var firstChild = main.children[0];
+    main.replaceChild(con, firstChild);
+    //last 3 rows without black
+    for(var i=0;i<3;i++){
+        createAllWhiteRow();
     }
+    //other rows
+    for(var i=0;i<4;i++){
+        createRow();
+    }
+    timeid = window.setInterval(update, 10);
 }
 //init
 var speed = 1;
 var score = 0;
-var blacks = document.getElementsByClassName('black');
-addBlackClick(blacks);
-var whites = document.getElementsByClassName('white');
-addWhiteClick(whites);
-var timeid = window.setInterval(update, 10);
+var timeid = null;
+home();

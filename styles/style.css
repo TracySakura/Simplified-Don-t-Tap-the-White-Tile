@@ -7,21 +7,45 @@
     overflow: hidden;
 }
 #con{
-    width: 200%;
+    width: 100%;
     height: 700px;
     position: relative;
     top: -100px;
     /*border-collapse: collapse;for what*/
 }
+#home{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.modeButton{
+    font-size: 24px;
+    border-radius: 12px;
+    width: 30%;
+    height: 10%;
+    margin: 10px;
+    background-color: bisque;
+    text-align: center;
+    display: block;
+}
+.modeButton:hover{
+    background-color: white;
+}
 .row{
     height: 100px;
     width: 100%;
 }
-.cell{
+.tile{
     width: 100px;
     height: 100%;
     float: left;
 }
 .black{
     background: black;
+}
+#score{
+    text-align: center;
 }
